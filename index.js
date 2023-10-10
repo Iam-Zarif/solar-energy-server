@@ -4,7 +4,7 @@ const app = express();
 require("dotenv").config();
 const port = process.env.PORT || 2000;
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 app.use(cors());
 app.use(express.json());
@@ -26,13 +26,29 @@ async function run() {
     const projectCollection = client
       .db("projects")
       .collection("projectsCollection");
-
+    
     // Define routes here
+
 
     app.get("/projects", async (req, res) => {
       const projects = await projectCollection.find().toArray();
       return res.send(projects);
     });
+    app.get("/projects/:id", async (req, res) =>{
+const id =req.params.id;
+const query = {_id : new ObjectId(id)};
+const results = await projectCollection.findOne(query);
+return res.send(results);
+    })
+    app.post("/contact", async (req, res) =>{
+const feedback = req.body;
+console.log(feedback);
+const result = projectCollection.insertOne(feedback);
+return res.send(result);
+    })
+
+
+
 
     await client.connect(); // Connect to the MongoDB server
     await client.db("admin").command({ ping: 1 });
