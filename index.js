@@ -23,9 +23,8 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    const projectCollection = client
-      .db("projects")
-      .collection("projectsCollection");
+    const projectCollection = client.db("projects").collection("projectsCollection");
+    const feedbackCollection = client.db("feedback").collection("feedbackCollection");
     
     // Define routes here
 
@@ -40,10 +39,14 @@ const query = {_id : new ObjectId(id)};
 const results = await projectCollection.findOne(query);
 return res.send(results);
     })
+    app.get("/contact", async (req, res) =>{
+      const feedbacks = await feedbackCollection.find().toArray();
+      return res.send(feedbacks);
+    })
     app.post("/contact", async (req, res) =>{
 const feedback = req.body;
 console.log(feedback);
-const result = projectCollection.insertOne(feedback);
+const result = feedbackCollection.insertOne(feedback);
 return res.send(result);
     })
 
