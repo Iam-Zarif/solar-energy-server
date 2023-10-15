@@ -25,6 +25,7 @@ async function run() {
   try {
     const projectCollection = client.db("projects").collection("projectsCollection");
     const feedbackCollection = client.db("feedback").collection("feedbackCollection");
+    const userInfoCollection = client.db("userInfo").collection("userInfoCollection");
     
     // Define routes here
 
@@ -39,14 +40,33 @@ const query = {_id : new ObjectId(id)};
 const results = await projectCollection.findOne(query);
 return res.send(results);
     })
-    app.get("/contact", async (req, res) =>{
+    app.get("/feedback", async (req, res) =>{
       const feedbacks = await feedbackCollection.find().toArray();
       return res.send(feedbacks);
     })
-    app.post("/contact", async (req, res) =>{
+    app.get("/userInfo", async (req, res) =>{
+      const userInfo = await userInfoCollection.find().toArray();
+      return res.send(userInfo);
+    })
+    app.get("/userInfoEmail", async (req, res) => {
+      let query = {};
+      if (req.query?.email) {
+        query = { email: req.query.email };
+      }
+      const result = await userInfoCollection.find(query).toArray();
+      res.send(result);
+    });
+    
+    app.post("/feedback", async (req, res) =>{
 const feedback = req.body;
 console.log(feedback);
 const result = feedbackCollection.insertOne(feedback);
+return res.send(result);
+    })
+    app.post("/userInfo", async (req, res) =>{
+const userInfo = req.body;
+console.log(userInfo);
+const result = userInfoCollection.insertOne(userInfo);
 return res.send(result);
     })
 
