@@ -26,6 +26,7 @@ async function run() {
     const projectCollection = client.db("projects").collection("projectsCollection");
     const feedbackCollection = client.db("feedback").collection("feedbackCollection");
     const userInfoCollection = client.db("userInfo").collection("userInfoCollection");
+    const benefitsCollection = client.db("benefits").collection("benefitsCollection");
     
     // Define routes here
 
@@ -33,6 +34,10 @@ async function run() {
     app.get("/projects", async (req, res) => {
       const projects = await projectCollection.find().toArray();
       return res.send(projects);
+    });
+    app.get("/benefits", async (req, res) => {
+      const benefits = await benefitsCollection.find().toArray();
+      return res.send(benefits);
     });
     app.get("/projects/:id", async (req, res) =>{
 const id =req.params.id;
