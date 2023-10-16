@@ -39,6 +39,12 @@ async function run() {
       const benefits = await benefitsCollection.find().toArray();
       return res.send(benefits);
     });
+    app.get("/benefits/:id", async (req, res) =>{
+const id =req.params.id;
+const query = {_id : new ObjectId(id)};
+const results = await benefitsCollection.findOne(query);
+return res.send(results);
+    })
     app.get("/projects/:id", async (req, res) =>{
 const id =req.params.id;
 const query = {_id : new ObjectId(id)};
